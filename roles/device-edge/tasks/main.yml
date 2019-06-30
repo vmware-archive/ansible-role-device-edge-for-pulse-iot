@@ -1,0 +1,58 @@
+#
+# Copyright © 2019 VMware, Inc. All Rights Reserved.
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
+---
+- name: create a temporary directory on the Ansible controller
+  local_action:
+    module: tempfile
+    state: directory
+    prefix: temp
+  run_once: True
+  register: controller_tempfile_results
+- name: download Pulse agent tar file to Ansible controller
+  local_action:
+    module: get_url
+    url: "{{ pulse_agent_download_url }}"
+    dest: "{{controller_tempfile_results.path}}/iotc-agent.tar.gz"
+    mode: '655'
+    validate_certs: no
+  run_once: True
+- name: check if device edge is already registered
+  stat:
+    path: /opt/vmware/iotc-agent/data/data/deviceIds.data
+  register: device_edge_registration_file
+- name: create a temporary directory on device edge
+  tempfile:
+    state: directory
+    prefix: temp
+  register: device_edge_tempfile_results
+  when: not device_edge_registration_file.stat.exists
+- name: push Pulse agent tar file to device edge
+  unarchive:
+    src: "{{controller_tempfile_results.path}}/iotc-agent.tar.gz"
+    dest: "{{device_edge_tempfile_results.path}}"
+    mode: '1777'
+  when: not device_edge_registration_file.stat.exists
+- name: install Pulse agent
+  command: sh {{device_edge_tempfile_results.path}}/iotc-agent/install.sh
+  args:
+    creates: /opt/vmware/iotc-agent
+  when: not device_edge_registration_file.stat.exists
+- name: create the password file
+  copy:
+    dest: "{{device_edge_tempfile_results.path}}/pw"
+    content: "{{ pulse_enrollment_user_password }}"
+    mode: '600'
+  when: not device_edge_registration_file.stat.exists
+- name: enroll device edge to Pulse
+  command: /opt/vmware/iotc-agent/bin/iotc-agent-cli enroll --template={{pulse_gateway_template_name}} --name={{inventory_hostname}}_{{ansible_facts['default_ipv4']['macaddress']}} --username={{pulse_enrollment_user}} --password=file:{{device_edge_tempfile_results.path}}/pw
+  args:
+    creates: /opt/vmware/iotc-agent/data/data/deviceIds.data
+  when: not device_edge_registration_file.stat.exists
+- name: delete password file
+  file:
+    path: "{{device_edge_tempfile_results.path}}/pw"
+    state: absent
+  when: not device_edge_registration_file.stat.exists

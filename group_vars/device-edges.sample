@@ -1,0 +1,15 @@
+#
+# Copyright © 2019 VMware, Inc. All Rights Reserved.
+#
+# SPDX-License-Identifier: BSD-2-Clause
+#
+
+# Here are variables related to running Ansible on the nodes
+ansible_python_interpreter: /usr/bin/python3
+ansible_ssh_extra_args: '-o StrictHostKeyChecking=no'
+
+# Here are variables related to the Pulse agent installation
+pulse_enrollment_user_password: EDIT_ME
+pulse_agent_download_url: EDIT_ME
+pulse_enrollment_user: EDIT_ME
+pulse_gateway_template_name: EDIT_ME

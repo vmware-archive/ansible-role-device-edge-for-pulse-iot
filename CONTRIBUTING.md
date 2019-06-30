@@ -1,5 +1,3 @@
-
-
 # Contributing to ansible-role-device-edge-for-pulse-iot
 
 The ansible-role-device-edge-for-pulse-iot project team welcomes contributions from the community. Before you start working with ansible-role-device-edge-for-pulse-iot, please
