@@ -63,8 +63,8 @@ as an open-source patch. For more detailed information, refer to [CONTRIBUTING.m
 
 ## Authors
 
-* **Luis M. Valerio** - *Initial work* - [ansible-role-pulse-v2-device-edge](https://gitlab.eng.vmware.com/ps-emerging/ansible-role-pulse-v2-gateway)
+* **Luis M. Valerio** - *Initial work* - [ansible-role-device-edge-for-pulse-iot](https://github.com/vmware/ansible-role-device-edge-for-pulse-iot)
 
 ## License
 
-This project is licensed under the BSD 2-Clause License - see the [LICENSE](LICENSE) file for details
+This project is licensed under the BSD 2-Clause License - see the [LICENSE.txt](LICENSE.txt) file for details
