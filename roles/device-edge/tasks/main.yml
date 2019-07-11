@@ -47,7 +47,7 @@
     mode: '600'
   when: not device_edge_registration_file.stat.exists
 - name: enroll device edge to Pulse
-  command: /opt/vmware/iotc-agent/bin/iotc-agent-cli enroll --template={{pulse_gateway_template_name}} --name={{inventory_hostname}}_{{ansible_facts['default_ipv4']['macaddress']}} --username={{pulse_enrollment_user}} --password=file:{{device_edge_tempfile_results.path}}/pw
+  command: /opt/vmware/iotc-agent/bin/iotc-agent-cli enroll --auth-type=BASIC --template={{pulse_gateway_template_name}} --name={{inventory_hostname}}_{{ansible_facts['default_ipv4']['macaddress']}} --username={{pulse_enrollment_user}} --password=file:{{device_edge_tempfile_results.path}}/pw
   args:
     creates: /opt/vmware/iotc-agent/data/data/deviceIds.data
   when: not device_edge_registration_file.stat.exists
